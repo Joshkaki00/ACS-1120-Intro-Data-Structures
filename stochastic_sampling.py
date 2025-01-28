@@ -15,3 +15,10 @@ def parse_histogram(file_path):
             histogram[word] += 1
     return list(histogram.items())
 
+
+def random_sample(histogram):
+    """
+    Select a random word from the histogram ignoring frequencies.
+    """
+    words = [word for word, _ in histogram]
+    return random.choice(words)
