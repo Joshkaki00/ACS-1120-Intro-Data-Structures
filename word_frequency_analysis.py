@@ -38,6 +38,7 @@ def tuple_frequency(word: str, histogram: List[Tuple[str, int]]) -> int:
         return histogram[idx][1]
     return 0
 
+
 def save_histogram_to_file(histogram: List[Tuple[str, int]], filename: str):
     """
     Save the histogram to a plain text file.
