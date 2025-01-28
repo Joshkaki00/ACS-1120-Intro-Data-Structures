@@ -1,16 +1,11 @@
-# File: word_frequency_analysis.py
-
 import re
 from collections import Counter
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Union
 
 
 def read_file(file_path: str) -> str:
     """
     Reads the content of a text file and returns it as a string.
-
-    :param file_path: Path to the text file.
-    :return: The content of the file as a string.
     """
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -24,15 +19,10 @@ def read_file(file_path: str) -> str:
 def histogram(source_text: Union[str, List[str]]) -> Dict[str, int]:
     """
     Generate a histogram (word frequency count) from the given text or list of words.
-
-    :param source_text: A string of text or a list of words.
-    :return: A dictionary where keys are words and values are their frequencies.
     """
     if isinstance(source_text, str):
-        # Normalize and split text into words
         words = re.findall(r'\b\w+\b', source_text.lower())
     else:
-        # Assume source_text is already a list of words
         words = source_text
 
     return Counter(words)
@@ -41,9 +31,6 @@ def histogram(source_text: Union[str, List[str]]) -> Dict[str, int]:
 def unique_words(histogram: Dict[str, int]) -> int:
     """
     Count the number of unique words in a histogram.
-
-    :param histogram: A dictionary where keys are words and values are their frequencies.
-    :return: Total number of unique words.
     """
     return len(histogram)
 
@@ -51,22 +38,35 @@ def unique_words(histogram: Dict[str, int]) -> int:
 def frequency(word: str, histogram: Dict[str, int]) -> int:
     """
     Get the frequency of a specific word in the histogram.
-
-    :param word: The word to search for.
-    :param histogram: A dictionary where keys are words and values are their frequencies.
-    :return: The frequency of the word, or 0 if the word is not found.
     """
     return histogram.get(word.lower(), 0)
 
 
+def most_frequent_words(histogram: Dict[str, int], n: int = 10) -> List[Tuple[str, int]]:
+    """
+    Get the top 'n' most frequent words from the histogram.
+    """
+    return Counter(histogram).most_common(n)
+
+
+def least_frequent_words(histogram: Dict[str, int], n: int = 10) -> List[Tuple[str, int]]:
+    """
+    Get the 'n' least frequent words from the histogram.
+    """
+    return sorted(histogram.items(), key=lambda item: item[1])[:n]
+
+
 # Example usage
 if __name__ == "__main__":
-    # Example with a file
-    file_path = "/Users/joshkaki/Downloads/Le roman de Joël _ Project Gutenberg.html"  # Replace with your file path
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Analyze word frequencies in a text.")
+    parser.add_argument("file_path", type=str, help="Path to the text file.")
+    args = parser.parse_args()
 
     try:
         # Read text from file
-        text = read_file(file_path)
+        text = read_file(args.file_path)
 
         # Generate histogram
         hist = histogram(text)
@@ -77,7 +77,15 @@ if __name__ == "__main__":
         print("Unique Words:", unique_count)
 
         # Frequency of a specific word
-        word_freq = frequency("les", hist)
-        print("Frequency of 'les':", word_freq)
+        word = "les"  # Replace with desired word
+        word_freq = frequency(word, hist)
+        print(f"Frequency of '{word}':", word_freq)
+
+        # Most frequent words
+        print("Most Frequent Words:", most_frequent_words(hist, 10))
+
+        # Least frequent words
+        print("Least Frequent Words:", least_frequent_words(hist, 10))
+
     except Exception as e:
         print(f"Error: {e}")
