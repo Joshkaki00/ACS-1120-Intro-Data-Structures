@@ -18,3 +18,13 @@ def histogram(source_text: Union[str, List[str]]) -> Dict[str, int]:
         words = source_text
 
     return Counter(words)
+
+
+def unique_words(histogram: Dict[str, int]) -> int:
+    """
+    Count the number of unique words in a histogram.
+
+    :param histogram: A dictionary where keys are words and values are their frequencies.
+    :return: Total number of unique words.
+    """
+    return len(histogram)
