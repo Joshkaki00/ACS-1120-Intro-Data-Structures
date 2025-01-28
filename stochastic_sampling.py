@@ -22,3 +22,12 @@ def random_sample(histogram):
     """
     words = [word for word, _ in histogram]
     return random.choice(words)
+
+
+def weighted_sample(histogram):
+    """
+    Select a random word based on the weights from the histogram.
+    """
+    total_count = sum(count for _, count in histogram)  # Total frequency
+    dart = random.randint(1, total_count)  # Random point on the number line
+    fence = 0
