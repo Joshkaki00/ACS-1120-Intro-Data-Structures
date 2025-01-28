@@ -1,6 +1,6 @@
 import re
 from collections import Counter
-from typing import Dict, List, Union
+from typing import Dict, List, Tuple, Union
 
 
 def read_file(file_path: str) -> str:
