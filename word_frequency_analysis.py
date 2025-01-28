@@ -2,7 +2,6 @@ import re
 import argparse
 from collections import Counter
 from typing import List, Tuple
-from nltk.corpus import stopwords
 
 
 def list_based_histogram(source_text: str) -> List[Tuple[str, int]]:
