@@ -7,13 +7,17 @@ from nltk.corpus import stopwords
 
 def list_based_histogram(source_text: str) -> List[Tuple[str, int]]:
     """
-    Generate a histogram as a list of tuples from source text,
-    excluding stopwords and non-alphabetic words.
+    Generate a histogram as a list of tuples from source text.
+    :param source_text: The content of the text file.
+    :return: A sorted list of tuples representing word frequencies.
     """
-    stop_words = set(stopwords.words('english'))
-    words = re.findall(r'\b[a-zA-Z]+\b', source_text.lower())
-    filtered_words = [word for word in words if word not in stop_words]
-    hist = Counter(filtered_words).items()
+    # Normalize text: lowercase, remove punctuation
+    words = re.findall(r'\b\w+\b', source_text.lower())
+
+    # Count word frequencies using Counter and convert to list of tuples
+    hist = Counter(words).items()
+
+    # Return sorted list of tuples for optimized read operations
     return sorted(hist)
 
 
