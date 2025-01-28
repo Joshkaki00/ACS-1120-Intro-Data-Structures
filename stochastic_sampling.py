@@ -64,6 +64,7 @@ def benchmark_sampling(histogram, cumulative_distribution, iterations=100000):
     print(f"Random Sampling Time: {random_time:.4f} seconds")
     print(f"Weighted Sampling Time: {weighted_time:.4f} seconds")
 
+
 def validate_weighted_sampling(cumulative_distribution, histogram, iterations=100000):
     """
     Validate weighted sampling by comparing observed and expected probabilities.
