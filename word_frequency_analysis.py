@@ -1,91 +1,98 @@
 import re
+import time
+import argparse
 from collections import Counter
-from typing import Dict, List, Tuple, Union
+from typing import List, Tuple, Dict, Union
 
 
-def read_file(file_path: str) -> str:
+# Histogram using list of tuples
+def list_based_histogram(source_text: str) -> List[Tuple[str, int]]:
     """
-    Reads the content of a text file and returns it as a string.
+    Generate a histogram as a list of tuples from source text.
+    :param source_text: The content of the text file.
+    :return: A sorted list of tuples representing word frequencies.
     """
-    try:
-        with open(file_path, 'r', encoding='utf-8') as file:
-            return file.read()
-    except FileNotFoundError:
-        raise FileNotFoundError(f"The file at {file_path} was not found.")
-    except IOError as e:
-        raise IOError(f"An error occurred while reading the file: {e}")
+    # Normalize text: lowercase, remove punctuation
+    words = re.findall(r'\b\w+\b', source_text.lower())
+
+    # Count word frequencies using Counter and convert to list of tuples
+    hist = Counter(words).items()
+
+    # Return sorted list of tuples for optimized read operations
+    return sorted(hist)
 
 
-def histogram(source_text: Union[str, List[str]]) -> Dict[str, int]:
+def tuple_frequency(word: str, histogram: List[Tuple[str, int]]) -> int:
     """
-    Generate a histogram (word frequency count) from the given text or list of words.
+    Retrieve the frequency of a word from the tuple-based histogram.
+    :param word: The word to search for.
+    :param histogram: The histogram as a sorted list of tuples.
+    :return: Frequency count of the word.
     """
-    if isinstance(source_text, str):
-        words = re.findall(r'\b\w+\b', source_text.lower())
-    else:
-        words = source_text
+    from bisect import bisect_left
 
-    return Counter(words)
+    word = word.lower()
+    words = [item[0] for item in histogram]
+    idx = bisect_left(words, word)
+    if idx < len(words) and words[idx] == word:
+        return histogram[idx][1]
+    return 0
 
-
-def unique_words(histogram: Dict[str, int]) -> int:
+def save_histogram_to_file(histogram: List[Tuple[str, int]], filename: str):
     """
-    Count the number of unique words in a histogram.
+    Save the histogram to a plain text file.
+    :param histogram: The histogram as a sorted list of tuples.
+    :param filename: The file to save the histogram to.
     """
-    return len(histogram)
+    with open(filename, 'w', encoding='utf-8') as file:
+        for word, count in histogram:
+            file.write(f"{word} {count}\n")
 
 
-def frequency(word: str, histogram: Dict[str, int]) -> int:
+def load_histogram_from_file(filename: str) -> List[Tuple[str, int]]:
     """
-    Get the frequency of a specific word in the histogram.
+    Load a histogram from a plain text file.
+    :param filename: The file containing the histogram.
+    :return: A list of tuples representing word frequencies.
     """
-    return histogram.get(word.lower(), 0)
+    histogram = []
+    with open(filename, 'r', encoding='utf-8') as file:
+        for line in file:
+            word, count = line.split()
+            histogram.append((word, int(count)))
+    return histogram
 
 
-def most_frequent_words(histogram: Dict[str, int], n: int = 10) -> List[Tuple[str, int]]:
-    """
-    Get the top 'n' most frequent words from the histogram.
-    """
-    return Counter(histogram).most_common(n)
-
-
-def least_frequent_words(histogram: Dict[str, int], n: int = 10) -> List[Tuple[str, int]]:
-    """
-    Get the 'n' least frequent words from the histogram.
-    """
-    return sorted(histogram.items(), key=lambda item: item[1])[:n]
-
-
-# Example usage
-if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(description="Analyze word frequencies in a text.")
-    parser.add_argument("file_path", type=str, help="Path to the text file.")
+def main():
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(description="Generate and analyze word frequency histograms from text files.")
+    parser.add_argument("file", help="Path to the input text file.")
+    parser.add_argument("-s", "--save", help="Path to save the histogram file.", default="histogram.txt")
+    parser.add_argument("-w", "--word", help="Word to check frequency for.")
     args = parser.parse_args()
 
+    # Read text file
     try:
-        # Read text from file
-        text = read_file(args.file_path)
+        with open(args.file, 'r', encoding='utf-8') as file:
+            content = file.read()
+    except FileNotFoundError:
+        print(f"Error: File '{args.file}' not found.")
+        return
 
-        # Generate histogram
-        hist = histogram(text)
-        print("Histogram:", hist)
+    # Generate histogram
+    hist = list_based_histogram(content)
+    print("Generated Histogram:", hist)
 
-        # Count unique words
-        unique_count = unique_words(hist)
-        print("Unique Words:", unique_count)
+    # Save histogram if save path is provided
+    if args.save:
+        save_histogram_to_file(hist, args.save)
+        print(f"Histogram saved to '{args.save}'.")
 
-        # Frequency of a specific word
-        word = "les"  # Replace with desired word
-        word_freq = frequency(word, hist)
-        print(f"Frequency of '{word}':", word_freq)
+    # Check frequency of a word if provided
+    if args.word:
+        freq = tuple_frequency(args.word, hist)
+        print(f"Frequency of '{args.word}': {freq}")
 
-        # Most frequent words
-        print("Most Frequent Words:", most_frequent_words(hist, 10))
 
-        # Least frequent words
-        print("Least Frequent Words:", least_frequent_words(hist, 10))
-
-    except Exception as e:
-        print(f"Error: {e}")
+if __name__ == "__main__":
+    main()
