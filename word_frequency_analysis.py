@@ -1,8 +1,8 @@
+# File: word_frequency_analysis.py
+
 import re
-import time
 from collections import Counter
-from tkinter import Tk, filedialog
-from typing import Dict, List, Union
+from typing import Dict, List, Tuple, Union
 
 
 def read_file(file_path: str) -> str:
@@ -29,8 +29,10 @@ def histogram(source_text: Union[str, List[str]]) -> Dict[str, int]:
     :return: A dictionary where keys are words and values are their frequencies.
     """
     if isinstance(source_text, str):
-        words = re.findall(r'\b\w+\b', source_text.lower())  # Tokenize words
+        # Normalize and split text into words
+        words = re.findall(r'\b\w+\b', source_text.lower())
     else:
+        # Assume source_text is already a list of words
         words = source_text
 
     return Counter(words)
@@ -57,46 +59,25 @@ def frequency(word: str, histogram: Dict[str, int]) -> int:
     return histogram.get(word.lower(), 0)
 
 
-def main():
-    """
-    Main function to interactively select a file, process it for word frequency,
-    and display the analysis results.
-    """
-    # Use tkinter to open a file dialog
-    root = Tk()
-    root.withdraw()  # Hide the main Tkinter window
-    file_path = filedialog.askopenfilename(
-        title="Select a Text File",
-        filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")]
-    )
-
-    if not file_path:
-        print("No file selected. Exiting.")
-        return
+# Example usage
+if __name__ == "__main__":
+    # Example with a file
+    file_path = "/Users/joshkaki/Downloads/Le roman de Joël _ Project Gutenberg.html"  # Replace with your file path
 
     try:
-        # Step 1: Read the selected file
+        # Read text from file
         text = read_file(file_path)
 
-        # Step 2: Generate histogram
+        # Generate histogram
         hist = histogram(text)
-        print(f"Histogram for '{file_path}':\n{hist}\n")
+        print("Histogram:", hist)
 
-        # Step 3: Count unique words
+        # Count unique words
         unique_count = unique_words(hist)
-        print(f"Unique Words: {unique_count}")
+        print("Unique Words:", unique_count)
 
-        # Step 4: Frequency of a specific word
-        word = input("Enter a word to check its frequency (or press Enter to skip): ").strip()
-        if word:
-            word_freq = frequency(word, hist)
-            print(f"Frequency of '{word}': {word_freq}")
-        else:
-            print("Skipped word frequency check.")
-
+        # Frequency of a specific word
+        word_freq = frequency("les", hist)
+        print("Frequency of 'les':", word_freq)
     except Exception as e:
         print(f"Error: {e}")
-
-
-if __name__ == "__main__":
-    main()
