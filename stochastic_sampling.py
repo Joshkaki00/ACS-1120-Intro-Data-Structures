@@ -54,3 +54,30 @@ def validate_weighted_sampling(histogram, iterations=10000):
         expected_probability = count / sum(c for _, c in histogram)
         observed_probability = results[word] / total
         print(f"Word: {word}, Expected: {expected_probability:.2%}, Observed: {observed_probability:.2%}")
+
+
+if __name__ == "__main__":
+    # Check for command-line arguments
+    if len(sys.argv) < 2:
+        print("Usage: python3 sample.py <file_path> or <word_list>")
+        sys.exit(1)
+
+    # Parse input (file or inline word list)
+    if len(sys.argv) == 2:  # File input
+        file_path = sys.argv[1]
+        histogram = parse_histogram(file_path)
+    else:  # Inline word list
+        words = sys.argv[1:]
+        histogram = Counter(words).items()
+
+    # Display random and weighted sampling results
+    print("Random Sampling (ignoring weights):")
+    for _ in range(5):
+        print(random_sample(histogram))
+
+    print("\nFrequency-Weighted Sampling:")
+    for _ in range(5):
+        print(weighted_sample(histogram))
+
+    # Validate weighted sampling probabilities
+    validate_weighted_sampling(histogram)
