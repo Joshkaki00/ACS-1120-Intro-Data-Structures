@@ -42,8 +42,8 @@ def frequency(word: str, histogram: Dict[str, int]) -> int:
 
 
 # Example usage
-if __name__ == "__main__":
-    # Sample text
+if __name__ == "__main__"
+'''    # Sample text
     sample_text = "One fish two fish red fish blue fish"
 
     # Generate histogram
@@ -57,3 +57,4 @@ if __name__ == "__main__":
     # Frequency of a specific word
     word_freq = frequency("fish", hist)
     print("Frequency of 'fish':", word_freq)
+    '''
