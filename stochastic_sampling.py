@@ -1,5 +1,6 @@
 import random
 import sys
+import time
 from collections import Counter
 
 
@@ -38,7 +39,28 @@ def weighted_sample(histogram):
             return word
 
 
-def validate_weighted_sampling(histogram, iterations=10000):
+def benchmark_sampling(histogram, iterations=100000):
+    """
+    Benchmark the random and weighted sampling functions.
+    Measure execution time for the given number of iterations.
+    """
+    print(f"\nBenchmarking for {iterations} iterations...")
+
+    start_time = time.time()
+    for _ in range(iterations):
+        random_sample(histogram)
+    random_time = time.time() - start_time
+
+    start_time = time.time()
+    for _ in range(iterations):
+        weighted_sample(histogram)
+    weighted_time = time.time() - start_time
+
+    print(f"Random Sampling Time: {random_time:.4f} seconds")
+    print(f"Weighted Sampling Time: {weighted_time:.4f} seconds")
+
+
+def validate_weighted_sampling(histogram, iterations=100000):
     """
     Validate the weighted sampling function by running it multiple times
     and analyzing the frequency of each word.
@@ -49,7 +71,7 @@ def validate_weighted_sampling(histogram, iterations=10000):
         results[selected_word] += 1
 
     total = sum(results.values())
-    print("\nValidation Results:")
+    print("\nValidation Results (Weighted Sampling):")
     for word, count in histogram:
         expected_probability = count / sum(c for _, c in histogram)
         observed_probability = results[word] / total
@@ -78,6 +100,9 @@ if __name__ == "__main__":
     print("\nFrequency-Weighted Sampling:")
     for _ in range(5):
         print(weighted_sample(histogram))
+
+    # Benchmark the sampling functions
+    benchmark_sampling(histogram)
 
     # Validate weighted sampling probabilities
     validate_weighted_sampling(histogram)
