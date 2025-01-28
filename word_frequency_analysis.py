@@ -39,3 +39,21 @@ def frequency(word: str, histogram: Dict[str, int]) -> int:
     :return: The frequency of the word, or 0 if the word is not found.
     """
     return histogram.get(word.lower(), 0)
+
+
+# Example usage
+if __name__ == "__main__":
+    # Sample text
+    sample_text = "One fish two fish red fish blue fish"
+
+    # Generate histogram
+    hist = histogram(sample_text)
+    print("Histogram:", hist)
+
+    # Count unique words
+    unique_count = unique_words(hist)
+    print("Unique Words:", unique_count)
+
+    # Frequency of a specific word
+    word_freq = frequency("fish", hist)
+    print("Frequency of 'fish':", word_freq)
