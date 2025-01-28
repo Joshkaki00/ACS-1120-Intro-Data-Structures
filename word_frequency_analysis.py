@@ -16,9 +16,9 @@ def read_file(file_path: str) -> str:
         with open(file_path, 'r', encoding='utf-8') as file:
             return file.read()
     except FileNotFoundError:
-        raise FileNotFoundError(f"The file at {file_path} was not found.") from exc
+        raise FileNotFoundError(f"The file at {file_path} was not found.")
     except IOError as e:
-        raise IOError(f"An error occurred while reading the file: {e}") from e
+        raise IOError(f"An error occurred while reading the file: {e}")
 
 
 def histogram(source_text: Union[str, List[str]]) -> Dict[str, int]:
