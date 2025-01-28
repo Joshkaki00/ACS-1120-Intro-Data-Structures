@@ -1,77 +1,79 @@
 import random
 import sys
-import time
 from collections import Counter
+from bisect import bisect
+from bs4 import BeautifulSoup
 
 
 def parse_histogram(file_path):
     """
     Parse a text file into a histogram.
-    Each word in the file contributes to the frequency count.
+    Preprocess the text to clean non-word content.
     """
-    histogram = Counter()
-    with open(file_path, 'r') as file:
-        words = file.read().split()
-        for word in words:
-            histogram[word] += 1
+    with open(file_path, 'r', encoding='utf-8') as file:
+        raw_content = file.read()
+        # Clean HTML tags using BeautifulSoup
+        soup = BeautifulSoup(raw_content, 'html.parser')
+        cleaned_text = soup.get_text()
+        words = cleaned_text.split()
+        histogram = Counter(words)
     return list(histogram.items())
 
 
-def random_sample(histogram):
+def build_cumulative_distribution(histogram):
     """
-    Select a random word from the histogram ignoring frequencies.
+    Build cumulative probabilities for weighted sampling.
     """
-    words = [word for word, _ in histogram]
-    return random.choice(words)
-
-
-def weighted_sample(histogram):
-    """
-    Select a random word based on the weights from the histogram.
-    """
-    total_count = sum(count for _, count in histogram)  # Total frequency
-    dart = random.randint(1, total_count)  # Random point on the number line
-    fence = 0
-
+    cumulative = []
+    total_count = sum(count for _, count in histogram)
+    running_total = 0
     for word, count in histogram:
-        fence += count
-        if fence >= dart:
-            return word
+        running_total += count
+        cumulative.append((running_total / total_count, word))  # Probability and word
+    return cumulative
 
 
-def benchmark_sampling(histogram, iterations=100000):
+def cumulative_weighted_sample(cumulative_distribution):
     """
-    Benchmark the random and weighted sampling functions.
-    Measure execution time for the given number of iterations.
+    Select a random word using cumulative probabilities.
+    """
+    dart = random.random()  # Generate a number between 0 and 1
+    idx = bisect([prob for prob, _ in cumulative_distribution], dart)
+    return cumulative_distribution[idx][1]
+
+
+def benchmark_sampling(histogram, cumulative_distribution, iterations=100000):
+    """
+    Benchmark the random and optimized weighted sampling functions.
     """
     print(f"\nBenchmarking for {iterations} iterations...")
 
+    # Benchmark random sampling
     start_time = time.time()
     for _ in range(iterations):
         random_sample(histogram)
     random_time = time.time() - start_time
 
+    # Benchmark cumulative weighted sampling
     start_time = time.time()
     for _ in range(iterations):
-        weighted_sample(histogram)
+        cumulative_weighted_sample(cumulative_distribution)
     weighted_time = time.time() - start_time
 
     print(f"Random Sampling Time: {random_time:.4f} seconds")
     print(f"Weighted Sampling Time: {weighted_time:.4f} seconds")
 
-
-def validate_weighted_sampling(histogram, iterations=100000):
+def validate_weighted_sampling(cumulative_distribution, histogram, iterations=100000):
     """
-    Validate the weighted sampling function by running it multiple times
-    and analyzing the frequency of each word.
+    Validate weighted sampling by comparing observed and expected probabilities.
     """
     results = Counter()
     for _ in range(iterations):
-        selected_word = weighted_sample(histogram)
+        selected_word = cumulative_weighted_sample(cumulative_distribution)
         results[selected_word] += 1
 
     total = sum(results.values())
-    print("\nValidation Results (Weighted Sampling):")
+    print("\nValidation Results (Cumulative Weighted Sampling):")
     for word, count in histogram:
         expected_probability = count / sum(c for _, c in histogram)
         observed_probability = results[word] / total
@@ -81,28 +83,25 @@ def validate_weighted_sampling(histogram, iterations=100000):
 if __name__ == "__main__":
     # Check for command-line arguments
     if len(sys.argv) < 2:
-        print("Usage: python3 sample.py <file_path> or <word_list>")
+        print("Usage: python3 optimized_sample.py <file_path>")
         sys.exit(1)
 
-    # Parse input (file or inline word list)
-    if len(sys.argv) == 2:  # File input
-        file_path = sys.argv[1]
-        histogram = parse_histogram(file_path)
-    else:  # Inline word list
-        words = sys.argv[1:]
-        histogram = Counter(words).items()
+    # Parse and preprocess histogram from the file
+    file_path = sys.argv[1]
+    histogram = parse_histogram(file_path)
 
-    # Display random and weighted sampling results
+    # Build cumulative probabilities
+    cumulative_distribution = build_cumulative_distribution(histogram)
+
+    # Display random and cumulative weighted sampling results
     print("Random Sampling (ignoring weights):")
     for _ in range(5):
-        print(random_sample(histogram))
+        print(random.choice([word for word, _ in histogram]))
 
-    print("\nFrequency-Weighted Sampling:")
+    print("\nCumulative Weighted Sampling:")
     for _ in range(5):
-        print(weighted_sample(histogram))
+        print(cumulative_weighted_sample(cumulative_distribution))
 
-    # Benchmark the sampling functions
-    benchmark_sampling(histogram)
-
-    # Validate weighted sampling probabilities
-    validate_weighted_sampling(histogram)
+    # Benchmark and validate sampling methods
+    benchmark_sampling(histogram, cumulative_distribution)
+    validate_weighted_sampling(cumulative_distribution, histogram)
