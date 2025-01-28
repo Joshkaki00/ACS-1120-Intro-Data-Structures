@@ -28,3 +28,14 @@ def unique_words(histogram: Dict[str, int]) -> int:
     :return: Total number of unique words.
     """
     return len(histogram)
+
+
+def frequency(word: str, histogram: Dict[str, int]) -> int:
+    """
+    Get the frequency of a specific word in the histogram.
+
+    :param word: The word to search for.
+    :param histogram: A dictionary where keys are words and values are their frequencies.
+    :return: The frequency of the word, or 0 if the word is not found.
+    """
+    return histogram.get(word.lower(), 0)
