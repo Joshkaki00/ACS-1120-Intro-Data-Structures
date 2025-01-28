@@ -62,7 +62,7 @@ def frequency(word: str, histogram: Dict[str, int]) -> int:
 # Example usage
 if __name__ == "__main__":
     # Example with a file
-    file_path = "~/Downloads/Le roman de Joël _ Project Gutenberg.html"  # Replace with your file path
+    file_path = "/Users/joshkaki/Downloads/Le roman de Joël _ Project Gutenberg.html"  # Replace with your file path
 
     try:
         # Read text from file
