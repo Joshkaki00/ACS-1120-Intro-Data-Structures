@@ -1,6 +1,24 @@
+# File: word_frequency_analysis.py
+
 import re
 from collections import Counter
 from typing import Dict, List, Tuple, Union
+
+
+def read_file(file_path: str) -> str:
+    """
+    Reads the content of a text file and returns it as a string.
+
+    :param file_path: Path to the text file.
+    :return: The content of the file as a string.
+    """
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            return file.read()
+    except FileNotFoundError:
+        raise FileNotFoundError(f"The file at {file_path} was not found.") from exc
+    except IOError as e:
+        raise IOError(f"An error occurred while reading the file: {e}") from e
 
 
 def histogram(source_text: Union[str, List[str]]) -> Dict[str, int]:
@@ -43,17 +61,23 @@ def frequency(word: str, histogram: Dict[str, int]) -> int:
 
 # Example usage
 if __name__ == "__main__":
-    # Sample text
-    sample_text = "One fish two fish red fish blue fish"
+    # Example with a file
+    file_path = "~/Downloads/Le roman de Joël _ Project Gutenberg.html"  # Replace with your file path
 
-    # Generate histogram
-    hist = histogram(sample_text)
-    print("Histogram:", hist)
+    try:
+        # Read text from file
+        text = read_file(file_path)
 
-    # Count unique words
-    unique_count = unique_words(hist)
-    print("Unique Words:", unique_count)
+        # Generate histogram
+        hist = histogram(text)
+        print("Histogram:", hist)
 
-    # Frequency of a specific word
-    word_freq = frequency("fish", hist)
-    print("Frequency of 'fish':", word_freq)
+        # Count unique words
+        unique_count = unique_words(hist)
+        print("Unique Words:", unique_count)
+
+        # Frequency of a specific word
+        word_freq = frequency("les", hist)
+        print("Frequency of 'les':", word_freq)
+    except Exception as e:
+        print(f"Error: {e}")
