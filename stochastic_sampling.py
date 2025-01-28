@@ -49,10 +49,10 @@ def benchmark_sampling(histogram, cumulative_distribution, iterations=100000):
     """
     print(f"\nBenchmarking for {iterations} iterations...")
 
-    # Benchmark random sampling
+    # Benchmark random sampling using random.choice
     start_time = time.time()
     for _ in range(iterations):
-        random_sample(histogram)
+        random.choice([word for word, _ in histogram])  # Inline random sampling
     random_time = time.time() - start_time
 
     # Benchmark cumulative weighted sampling
