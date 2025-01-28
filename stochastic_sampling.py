@@ -58,7 +58,7 @@ def main(file_path):
     # Read and clean text
     with open(file_path, 'r', encoding='utf-8') as file:
         words = clean_text(file.read())
-    
+
     # Count words using lists and tuples
     histogram = count_words(words)
 
