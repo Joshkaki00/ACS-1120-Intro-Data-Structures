@@ -10,7 +10,7 @@ def list_based_histogram(source_text: str) -> List[Tuple[str, int]]:
     Generate a histogram as a list of tuples from source text,
     excluding stopwords and non-alphabetic words.
     """
-    stop_words = set(stopwords.words('french'))  # For French stopwords
+    stop_words = set(stopwords.words('english'))
     words = re.findall(r'\b[a-zA-Z]+\b', source_text.lower())
     filtered_words = [word for word in words if word not in stop_words]
     hist = Counter(filtered_words).items()
