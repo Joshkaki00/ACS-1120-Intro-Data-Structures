@@ -2,6 +2,7 @@ import re
 import argparse
 from collections import Counter
 from typing import List, Tuple
+from bisect import bisect_left
 
 
 def list_based_histogram(source_text: str) -> List[Tuple[str, int]]:
@@ -27,7 +28,6 @@ def tuple_frequency(word: str, histogram: List[Tuple[str, int]]) -> int:
     :param histogram: The histogram as a sorted list of tuples.
     :return: Frequency count of the word.
     """
-    from bisect import bisect_left
 
     word = word.lower()
     words = [item[0] for item in histogram]
