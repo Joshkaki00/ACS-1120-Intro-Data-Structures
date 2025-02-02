@@ -55,7 +55,14 @@ class Listogram(list):
     def sample(self):
         """Return a word from this histogram, randomly sampled by weighting
         each word's probability of being chosen by its observed frequency."""
-        # TODO: Randomly choose a word based on its frequency in this histogram
+        total = self.tokens
+        dart = random.uniform(0, total)  # Random number in range [0, total)
+        cumulative = 0
+
+        for word, count in self:
+            cumulative += count
+            if dart < cumulative:
+                return word  # Return the word where dart falls in cumulative sum
 
 
 def print_histogram(word_list):
