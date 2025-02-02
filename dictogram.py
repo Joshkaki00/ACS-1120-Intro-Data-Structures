@@ -34,7 +34,13 @@ class Dictogram(dict):
     def sample(self):
         """Return a word from this histogram, randomly sampled by weighting
         each word's probability of being chosen by its observed frequency."""
-        # TODO: Randomly choose a word based on its frequency in this histogram
+        dart = random.uniform(0, self.tokens)  # Random float in range [0, total tokens)
+        cumulative = 0
+
+        for word, count in self.items():
+            cumulative += count  # Add current word's frequency
+            if dart < cumulative:
+                return word  # Return word where dart falls in cumulative sum
 
 
 def print_histogram(word_list):
