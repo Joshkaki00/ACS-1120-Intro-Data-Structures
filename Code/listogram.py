@@ -9,60 +9,51 @@ class Listogram(list):
 
     def __init__(self, word_list=None):
         """Initialize this histogram as a new list and count given words."""
-        super(Listogram, self).__init__()  # Initialize this as a new list
-        # Add properties to track useful word counts for this histogram
-        self.types = 0  # Count of distinct word types in this histogram
-        self.tokens = 0  # Total count of all word tokens in this histogram
-        # Count words in given list, if any
+        super(Listogram, self).__init__()  # Initialize as a new list
+        self.types = 0  # Distinct word types
+        self.tokens = 0  # Total word occurrences
+
         if word_list is not None:
             for word in word_list:
                 self.add_count(word)
 
     def add_count(self, word, count=1):
-        """Increase frequency count of given word by given count amount."""
-        for i, (w, c) in enumerate(self):
-            if w == word:
-                self[i] = (w, c + count)  # Update count in tuple
+        """Increase frequency count of given word."""
+        for entry in self:
+            if entry[0] == word:
+                entry[1] += count  # ✅ Modify list directly
                 self.tokens += count
                 return
-        # If word is not found, add it as a tuple
-        self.append((word, count))
+        self.append([word, count])  # ✅ Store as list, not tuple
         self.types += 1
         self.tokens += count
 
     def frequency(self, word):
-        """Return frequency count of given word, or 0 if word is not found."""
+        """Return frequency count of a word, or 0 if not found."""
         for entry in self:
             if entry[0] == word:
                 return entry[1]
         return 0
 
     def __contains__(self, word):
-        """Return boolean indicating if given word is in this histogram."""
-        for entry in self:
-            if entry[0] == word:
-                return True
-        return False
+        """Check if word exists in histogram."""
+        return any(entry[0] == word for entry in self)
 
     def index_of(self, target):
-        """Return the index of entry containing given target word if found in
-        this histogram, or None if target word is not found."""
+        """Return index of word in histogram, or None if not found."""
         for index, entry in enumerate(self):
             if entry[0] == target:
                 return index
         return None
 
     def sample(self):
-        """Return a word from this histogram, randomly sampled by weighting
-        each word's probability of being chosen by its observed frequency."""
-        total = self.tokens
-        dart = random.uniform(0, total)  # Random number in range [0, total)
+        """Return a word from histogram, weighted by frequency."""
+        dart = random.uniform(0, self.tokens)
         cumulative = 0
-
         for word, count in self:
             cumulative += count
             if dart < cumulative:
-                return word  # Return the word where dart falls in cumulative sum
+                return word
 
 
 def print_histogram(word_list):
