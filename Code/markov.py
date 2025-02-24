@@ -49,3 +49,27 @@ def generate_sentence(chain, length=10):
         else:
             break  # Stop if no next word available
     return ' '.join(sentence)
+
+
+def main():
+    """Main function to generate a sentence from a text file using Markov chain."""
+    if len(sys.argv) != 3:
+        print("Usage: python markov.py <filename> <sentence_length>")
+        sys.exit(1)
+
+    filename = sys.argv[1]
+    try:
+        length = int(sys.argv[2])
+    except ValueError:
+        print("Error: Sentence length must be an integer.")
+        sys.exit(1)
+
+    text = load_corpus(filename)
+    words = preprocess_text(text)
+    chain = build_markov_chain(words)
+    sentence = generate_sentence(chain, length)
+    print(sentence)
+
+
+if __name__ == "__main__":
+    main()
