@@ -17,3 +17,14 @@ def preprocess_text(text):
     text = ''.join(char if char.isalpha() or char.isspace() else ' ' for char in text)  # Remove punctuation
     words = text.lower().split()
     return words
+
+
+def build_markov_chain(words):
+    """Build a Markov chain where each word maps to possible next words."""
+    chain = {}
+    for i in range(len(words) - 1):
+        word, next_word = words[i], words[i + 1]
+        if word not in chain:
+            chain[word] = []
+        chain[word].append(next_word)
+    return chain
