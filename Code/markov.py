@@ -10,3 +10,10 @@ def load_corpus(filename):
     except FileNotFoundError:
         print(f"Error: File '{filename}' not found.")
         sys.exit(1)
+
+
+def preprocess_text(text):
+    """Clean and tokenize text into words."""
+    text = ''.join(char if char.isalpha() or char.isspace() else ' ' for char in text)  # Remove punctuation
+    words = text.lower().split()
+    return words
