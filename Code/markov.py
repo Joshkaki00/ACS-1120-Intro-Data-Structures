@@ -1,5 +1,6 @@
 #!python
 
+import random
 import sys
 
 def load_corpus(filename):
@@ -28,3 +29,23 @@ def build_markov_chain(words):
             chain[word] = []
         chain[word].append(next_word)
     return chain
+
+
+def generate_sentence(chain, length=10):
+    """Generate a sentence using the Markov chain."""
+    if not chain:
+        return "Error: Markov chain is empty."
+
+    # Select starting word using random index
+    keys = list(chain.keys())
+    word = keys[random.randint(0, len(keys) - 1)]
+    sentence = [word]
+
+    for _ in range(length - 1):
+        if word in chain and chain[word]:
+            next_words = chain[word]
+            word = next_words[random.randint(0, len(next_words) - 1)]
+            sentence.append(word)
+        else:
+            break  # Stop if no next word available
+    return ' '.join(sentence)
