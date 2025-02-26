@@ -34,10 +34,10 @@ class LinkedList:
         while node is not None:
             if node.data == old_item:
                 node.data = new_item
-                return  # Stop after replacing first occurrence
+                return True  # Indicate replacement was successful
             node = node.next
 
-        raise ValueError(f'Item not found: {old_item}')  # If old_item is not found
+        return False  # Indicate replacement failed
 
     def __repr__(self):
         """Return a string representation of this linked list."""
