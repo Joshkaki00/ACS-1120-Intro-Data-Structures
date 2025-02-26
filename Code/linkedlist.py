@@ -19,10 +19,25 @@ class LinkedList:
         """Initialize this linked list and append the given items, if any."""
         self.head = None  # First node
         self.tail = None  # Last node
+        self.size = 0  # Number of nodes
         # Append given items
         if items is not None:
             for item in items:
                 self.append(item)
+                
+    def replace(self, old_item, new_item):
+        """Replace the given old_item with new_item in the linked list.
+        Best case: O(1) if old_item is at the head.
+        Worst case: O(n) if old_item is at the tail or not in the list."""
+        node = self.head
+
+        while node is not None:
+            if node.data == old_item:
+                node.data = new_item
+                return  # Stop after replacing first occurrence
+            node = node.next
+
+        raise ValueError(f'Item not found: {old_item}')  # If old_item is not found
 
     def __repr__(self):
         """Return a string representation of this linked list."""
