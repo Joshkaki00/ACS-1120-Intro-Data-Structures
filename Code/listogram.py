@@ -18,14 +18,14 @@ class Listogram(list):
                 self.add_count(word)
 
     def add_count(self, word, count=1):
-        """Increase frequency count of given word."""
-        for entry in self:
-            if entry[0] == word:
-                entry[1] += count  # ✅ Modify list directly
-                self.tokens += count
-                return
-        self.append([word, count])  # ✅ Store as list, not tuple
-        self.types += 1
+        """Increase frequency count of given word using binary search."""
+        index = self.index_of(word)
+        if index is not None:
+            word, old_count = self[index]
+            self[index] = (word, old_count + count)  # Update tuple
+        else:
+            self.insert_sorted((word, count))  # Insert in sorted order
+            self.types += 1
         self.tokens += count
 
     def frequency(self, word):
@@ -40,11 +40,28 @@ class Listogram(list):
         return any(entry[0] == word for entry in self)
 
     def index_of(self, target):
-        """Return index of word in histogram, or None if not found."""
-        for index, entry in enumerate(self):
-            if entry[0] == target:
-                return index
+        """Return index of word in histogram using binary search, or None if not found."""
+        left, right = 0, len(self) - 1
+        while left <= right:
+            mid = (left + right) // 2
+            if self[mid][0] == target:
+                return mid
+            elif self[mid][0] < target:
+                left = mid + 1
+            else:
+                right = mid - 1
         return None
+    
+    def insert_sorted(self, item):
+        """Insert a word into the list in sorted order."""
+        if not self:
+            self.append(item)
+            return
+        for i in range(len(self)):
+            if self[i][0] > item[0]:
+                self.insert(i, item)
+                return
+        self.append(item)
 
     def sample(self):
         """Return a word from histogram, weighted by frequency."""
