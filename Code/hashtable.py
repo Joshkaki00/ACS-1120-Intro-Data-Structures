@@ -61,13 +61,12 @@ class HashTable(object):
         return any(k == key for k, _ in self.buckets[index].items())
 
     def get(self, key):
-        """Return the value associated with the given key, or raise KeyError.
-        TODO: Running time: O(???) Why and under what conditions?"""
-        # TODO: Find bucket where given key belongs
-        # TODO: Check if key-value entry exists in bucket
-        # TODO: If found, return value associated with given key
-        # TODO: Otherwise, raise error to tell user get failed
-        # Hint: raise KeyError('Key not found: {}'.format(key))
+        """Return the value associated with the given key, or raise KeyError. O(1) to O(n) depending on collisions."""
+        index = self._bucket_index(key)
+        for k, v in self.buckets[index].items():
+            if k == key:
+                return v
+        raise KeyError(f'Key not found: {key}')
 
     def set(self, key, value):
         """Insert or update the given key with its associated value.
