@@ -79,13 +79,14 @@ class HashTable(object):
         bucket.append((key, value))  # Insert new key-value pair
 
     def delete(self, key):
-        """Delete the given key from this hash table, or raise KeyError.
-        TODO: Running time: O(???) Why and under what conditions?"""
-        # TODO: Find bucket where given key belongs
-        # TODO: Check if key-value entry exists in bucket
-        # TODO: If found, delete entry associated with given key
-        # TODO: Otherwise, raise error to tell user delete failed
-        # Hint: raise KeyError('Key not found: {}'.format(key))
+        """Delete the given key from this hash table, or raise KeyError. O(1) to O(n) depending on collisions."""
+        index = self._bucket_index(key)
+        bucket = self.buckets[index]
+        for k, v in bucket.items():
+            if k == key:
+                bucket.delete((k, v))
+                return
+        raise KeyError(f'Key not found: {key}')
 
 def test_hash_table():
     ht = HashTable()
