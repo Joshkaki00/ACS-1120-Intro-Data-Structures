@@ -69,12 +69,14 @@ class HashTable(object):
         raise KeyError(f'Key not found: {key}')
 
     def set(self, key, value):
-        """Insert or update the given key with its associated value.
-        TODO: Running time: O(???) Why and under what conditions?"""
-        # TODO: Find bucket where given key belongs
-        # TODO: Check if key-value entry exists in bucket
-        # TODO: If found, update value associated with given key
-        # TODO: Otherwise, insert given key-value entry into bucket
+        """Insert or update the given key with its associated value. O(1) to O(n) depending on collisions."""
+        index = self._bucket_index(key)
+        bucket = self.buckets[index]
+        for k, v in bucket.items():
+            if k == key:
+                bucket.delete((k, v))  # Remove old key-value pair
+                break
+        bucket.append((key, value))  # Insert new key-value pair
 
     def delete(self, key):
         """Delete the given key from this hash table, or raise KeyError.
