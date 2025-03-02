@@ -56,10 +56,9 @@ class HashTable(object):
         return sum(bucket.length() for bucket in self.buckets)
 
     def contains(self, key):
-        """Return True if this hash table contains the given key, or False.
-        TODO: Running time: O(???) Why and under what conditions?"""
-        # TODO: Find bucket where given key belongs
-        # TODO: Check if key-value entry exists in bucket
+        """Return True if this hash table contains the given key, else False. O(1) to O(n) depending on collisions."""
+        index = self._bucket_index(key)
+        return any(k == key for k, _ in self.buckets[index].items())
 
     def get(self, key):
         """Return the value associated with the given key, or raise KeyError.
