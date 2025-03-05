@@ -17,12 +17,18 @@ This project is a simple tweet generator using a Markov chain. It leverages Flas
     ```
     **Replace *yourusername* with your actual username**
 
-2. **Install dependencies:**
+2. **Create and activate a virtual environment**
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    ```
+
+3. **Install dependencies:**
     ```bash
     pip install -r requirements.txt
     ```
 
-3. **Prepare your corpus file:**
+4. **Prepare your corpus file:**
     Place your text file (e.g., `pg84-images.txt`) in the Code directory.
 
 ## Running the Application
