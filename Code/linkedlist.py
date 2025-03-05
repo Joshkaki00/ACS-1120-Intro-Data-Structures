@@ -1,16 +1,16 @@
 #!python
 
 
-class Node(object):
-
-    def __init__(self, data):
-        """Initialize this node with the given data."""
+class Node:
+    def __init__(self, data, count=1):  # Add count parameter
+        """Initialize this node with data and an optional count (default = 1)."""
         self.data = data
+        self.count = count  # Track frequency of words
         self.next = None
 
     def __repr__(self):
         """Return a string representation of this node."""
-        return f'Node({self.data})'
+        return f'Node({self.data}, count={self.count})'
 
 
 class LinkedList:
@@ -70,19 +70,14 @@ class LinkedList:
         Running time: O(1) because we maintain a size counter."""
         return self.size
 
-    def append(self, item):
-        """Insert the given item at the tail of this linked list.
-        Running time: O(1) because we have direct access to the tail."""
-        new_node = Node(item)
-
-        if self.is_empty():
-            self.head = new_node
-            self.tail = new_node
+    def append(self, data, count=1):
+        """Append a new node with data and count."""
+        if self.head is None:
+            self.head = Node(data, count)  # Initialize first node
+            self.tail = self.head
         else:
-            self.tail.next = new_node
-            self.tail = new_node
-
-        self.size += 1
+            self.tail.next = Node(data, count)  # Append new node
+            self.tail = self.tail.next
 
     def prepend(self, item):
         """Insert the given item at the head of this linked list.
@@ -99,17 +94,13 @@ class LinkedList:
         self.size += 1
 
     def find(self, matcher):
-        """Return an item from this linked list if it is present.
-        Best case: O(1) if the item is found at the head.
-        Worst case: O(n) if the item is at the tail or not present."""
-        node = self.head
-
-        while node is not None:
-            if matcher(node.data):
-                return node.data
-            node = node.next
-
-        return None  # Not found
+        """Find and return the node where matcher(node) is True."""
+        current = self.head
+        while current:
+            if matcher(current):  # Pass the full node to matcher function
+                return current  # Return the full Node object
+            current = current.next
+        return None
 
     def delete(self, item):
         """Delete the given item from this linked list, or raise ValueError.

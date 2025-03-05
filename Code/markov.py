@@ -5,6 +5,7 @@ import sys
 from linkedlist import LinkedList
 from hashtable import HashTable
 
+
 def load_corpus(filename):
     """Load text from a file and return as a single string."""
     try:
@@ -17,13 +18,13 @@ def load_corpus(filename):
 
 def preprocess_text(text):
     """Clean and tokenize text into words."""
-    text = ''.join(char if char.isalpha() or char.isspace() else ' ' for char in text)  # Remove punctuation
+    text = ''.join(char if char.isalpha() or char.isspace() else ' ' for char in text)
     words = text.lower().split()
     return words
 
 
 def build_markov_chain(words):
-    """Build a Markov chain where each word maps to possible next words using a HashTable."""
+    """Build a Markov chain using a HashTable with LinkedLists storing word frequencies."""
     if not words:
         print("Error: No words found in the text.")
         sys.exit(1)
@@ -34,35 +35,64 @@ def build_markov_chain(words):
         word, next_word = words[i], words[i + 1]
         
         if chain.contains(word):
-            chain.get(word).append(next_word)  # Append to existing LinkedList
+            linked_list = chain.get(word)
+            node = linked_list.find(lambda node: node.data == next_word)  # Find node by data
+            if node:
+                node.count += 1  # Increment frequency count
+            else:
+                linked_list.append(next_word, 1)  # Store new word with count = 1
         else:
             new_list = LinkedList()
-            new_list.append(next_word)
-            chain.set(word, new_list)  # Store LinkedList in HashTable
+            new_list.append(next_word, 1)  # Initialize first occurrence
+            chain.set(word, new_list)
     
     return chain
 
 
+def weighted_random_choice(linked_list):
+    """Select a word from a LinkedList using weighted probability."""
+    word_counts = []
+    total_count = 0
+    
+    current = linked_list.head
+    while current:
+        word_counts.append((current.data, current.count))
+        total_count += current.count
+        current = current.next
+    
+    if not word_counts:
+        return None
+    
+    rand_val = random.uniform(0, total_count)
+    cumulative = 0
+    
+    for word, count in word_counts:
+        cumulative += count
+        if rand_val <= cumulative:
+            return word
+    
+    return word_counts[-1][0]  # Fallback (should never be hit)
+
+
 def generate_sentence(chain, length=10):
-    """Generate a sentence using the Markov chain."""
+    """Generate a sentence using the Markov chain with weighted random selection."""
     if not chain:
         return "Error: Markov chain is empty."
     
     keys = [key for key in chain.keys()]
     word = random.choice(keys)
     sentence = [word]
-
+    
     for _ in range(length - 1):
-        if chain.contains(word) and chain.get(word).head:
-            next_words = []
-            current = chain.get(word).head
-            while current:
-                next_words.append(current.data)
-                current = current.next
-            word = random.choice(next_words)
-            sentence.append(word)
+        if chain.contains(word):
+            linked_list = chain.get(word)
+            next_word = weighted_random_choice(linked_list)
+            if not next_word:
+                break
+            sentence.append(next_word)
+            word = next_word
         else:
-            break  # Stop if no next word available
+            break  # Stop if no next word is available
     
     return ' '.join(sentence)
 
@@ -72,7 +102,7 @@ def main():
     if len(sys.argv) != 3:
         print("Usage: python markov.py <filename> <sentence_length>")
         sys.exit(1)
-
+    
     filename = sys.argv[1]
     try:
         length = int(sys.argv[2])
@@ -81,7 +111,7 @@ def main():
     except ValueError:
         print("Error: Sentence length must be a positive integer.")
         sys.exit(1)
-
+    
     text = load_corpus(filename)
     words = preprocess_text(text)
     chain = build_markov_chain(words)
@@ -91,3 +121,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
