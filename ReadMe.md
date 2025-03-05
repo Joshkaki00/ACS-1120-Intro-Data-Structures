@@ -1,90 +1,57 @@
-# ACS 1120: Intro to Data Structures
+# Tweet Generator
 
-## Course Description
+This project is a simple tweet generator using a Markov chain. It leverages Flask to serve a web interface and API endpoints for generating sentences.
 
-A project based course that looks under the hood at data structures and algorithms to see how they work. In addition to implementing these structures in an application; students will build them from scratch, analyze their complexity, and benchmark their performance to gain an understanding of their tradeoffs and when to use them in practice. Students will write scripts, functions, and library modules to use text processing tools like regular expressions, construct and sample probability distributions to create a Markov language model and gain insight into how grammar works and natural language processing techniques.
+## Project Structure
 
-## Repository Setup
+- `app.py`: Main script that initializes the Flask application and Markov chain, and defines the routes.
+- `markov.py`: Module containing functions to load the corpus, preprocess text, build the Markov chain, and generate sentences.
+- `templates/index.html`: HTML template for the main page.
 
-:warning: **Important:** Please follow [these instructions](Setup.md) exactly to set up your clone of this course repository.
+## Setup
 
-## Learning Objectives
+1. **Clone the repository:**
+    ```bash
+    git clone https://github.com/(yourusername)/ACS-1120-Intro-Data-Structures.git
+    cd ACS-1120-Intro-Data-Structures/Code
+    ```
+    **Replace *yourusername* with your actual username**
 
-By the end of this course, students will be able to:
+2. **Install dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-1. Create Python programs that read and write text files and manipulate strings
-2. Build web apps with the Flask framework and deploy to the web
-3. Construct and sample probability distributions based on observed word frequencies
-4. Create Markov language models and use them to generate new sentences
-5. Use unit tests that assert correct behavior of functions and classes
-6. Implement core data structures including singly linked lists and hash tables
-7. Analyze the complexity of iterative algorithms and data structures with visual loop counting
+3. **Prepare your corpus file:**
+    Place your text file (e.g., `pg84-images.txt`) in the Code directory.
 
-## Schedule
+## Running the Application
 
-**Course Dates:** 2024 Term 3 (January 17 - March 4)<br>
-**Class Times:** Monday, Wednesday 4:00 - 6:45pm PST
+To start the Flask server, run the following command in your terminal:
+```bash
+python app.py
+```
 
-Day | Lesson Topics
-:-: | :------------------------------------------
-01  | [Strings & Random Numbers]
-02  | [Histogram Data Structures]
-03  | [Probability & Sampling]
-04  | [Flask Web App Development]
-05  | [Application Architecture]
-06  | [Generating Sentences]
-07  | [Arrays & Linked Lists]
-| - | Lab Day 
-08  | [Algorithm Analysis]
-09  | [Hash Tables]
-10  | Hash Table [Algorithm Analysis]
-11  | [Higher Order Markov Chains][final project]
-12  | [Regular Expressions]
-13  | Launch Day: Show & Tell
+By default, the server will run in port 5000. You can access the application at `http://127.0.0.1:5000/`.
 
-<!--
+## API Endpoints
 
-## Deliverable Schedule
+- **Home Page (`/`):** Serves the main HTML page with a generated sentence.
+- **Generate Sentence (`/generate`):** API endpoint that returns a new generated sentence.
 
-Deliverable                                       | Date Started |   Date Due    | Submission Form
-:------------------------------------------------ | :----------: | :-----------: | :--------------------------------------------------------------------------------------
-**[Project Check-In][flask web app development]** | Wed, Jan 19  |  Sun, Feb 6   | [Submit Project Check-In](https://www.gradescope.com/courses/76047/assignments/1826588)
-**[Linked List Challenges]**                      |  Mon, Feb 7  |  Sun, Feb 13  | [Submit Linked List](https://www.gradescope.com/courses/76047/assignments/1829207)
-**[Hash Table Challenges]**                       | Mon, Feb 14  |  Sun, Feb 20  | [Submit Hash Table](https://www.gradescope.com/courses/76047/assignments/1829208)
-**[Final Project]**                               | Mon, Feb 21  | Fri, March 11 | [Submit Final Project](https://www.gradescope.com/courses/76047/assignments/1826588)
--->
+## Example Usage
 
+1. **Home Page:**
+    - Visit `http://127.0.0.1:5000/` to see a generated sentence displayed on the main page.
 
-## Project Tutorial
+2. **Generate Sentence:**
+    - Visit `http://127.0.0.1:5000/generate` to get a new generated sentence in plain text.
 
-Students will complete the following guided project tutorial in this course:
+## Notes
 
-- [**Tweet Generator:** Data Structures & Probability with Python](https://bit.ly/tutorial-tweet-generator)
+- Ensure your corpus file is properly formatted and placed in the project directory.
+- Adjust the `FILENAME` and `SENTENCE_LENGTH` variables in `app.py` as needed.
 
-## Evaluation
+## License
 
-To pass this course, students must meet the following requirements:
-
-- Actively participate in class and abide by the attendance policy
-- Make up all classwork from all absences
-- Complete the required [project tutorial](#project-tutorial)
-- Turn in all deliverables on Gradescope
-
-[algorithm analysis]: Lessons/AlgorithmAnalysis.md
-[application architecture]: Lessons/Architecture.md
-[arrays & linked lists]: Lessons/ArraysLinkedLists.md
-[due]: ReadMe.md#Deliverable-Schedule
-[final project]: Lessons/MarkovChains.md
-[flask web app development]: Lessons/FlaskWebApp.md
-[generating sentences]: Lessons/Sentences.md
-[hash table challenges]: Lessons/HashTables.md#Challenges
-[hash tables]: Lessons/HashTables.md
-[higher order markov chains]: Lessons/MarkovChains.md
-[histogram data structures]: Lessons/Histograms.md
-[linked list challenges]: Lessons/ArraysLinkedLists.md#Challenges
-[probability & sampling]: Lessons/Probability.md
-[project check-in]: Lessons/FlaskWebApp.md
-[quiz]: StudyGuides.md
-[quiz study guides]: StudyGuides.md
-[regular expressions]: Lessons/RegularExpressions.md
-[strings & random numbers]: Lessons/RandomStrings.md
+This project is licensed under the MIT License. See the `LICENSE` file for details.
