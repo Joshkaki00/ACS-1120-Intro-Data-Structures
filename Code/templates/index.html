@@ -6,24 +6,57 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tweet Generator</title>
   <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
-  <div class="max-w-xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-    <h1 class="text-2xl font-bold text-gray-800 text-center mb-4">Generated Tweet</h1>
-    <blockquote class="italic text-lg text-gray-600 border-l-4 border-blue-500 pl-4" id="generated-text">
-      {{ sentence }}
-    </blockquote>
-    <div class="text-center mt-4">
-      <button class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition" onclick="fetchSentence()">
-        Generate Another
-      </button>
+<body class="bg-amber-50 flex items-center justify-center min-h-screen p-6">
+  <div class="max-w-xl w-full mx-auto bg-white border-2 border-amber-800 rounded-lg shadow-lg overflow-hidden">
+    <!-- Book cover appearance -->
+    <div class="bg-amber-900 text-amber-100 p-4 border-b-2 border-amber-800">
+      <h1 class="text-2xl font-serif text-center">Frankenstein/Modern Prometheus</h1>
+      <p class="text-center text-amber-200 text-sm mt-1 font-serif">Mary Wollstonecraft (Godwin) Shelley</p>
     </div>
+    
+    <!-- Page content with book-like styling -->
+    <div class="p-8 bg-gradient-to-b from-amber-50 to-white">
+      <!-- Decorative chapter header -->
+      <div class="text-center mb-6">
+        <div class="inline-block h-px w-16 bg-amber-800 align-middle"></div>
+        <span class="mx-4 text-amber-800 font-serif text-sm italic">Generated Text</span>
+        <div class="inline-block h-px w-16 bg-amber-800 align-middle"></div>
+      </div>
+      
+      <!-- Tweet content styled as book paragraph -->
+      <div class="mb-8">
+        <p class="font-serif leading-relaxed text-gray-800 first-letter:text-3xl first-letter:font-bold first-letter:text-amber-900 first-letter:mr-1 first-letter:float-left" id="generated-text">
+          {{ sentence }}
+        </p>
+      </div>
+      
+      <!-- Book page footer with decorative element -->
+      <div class="text-center border-t border-amber-200 pt-4 mt-8">
+        <button class="px-5 py-2 bg-amber-800 text-amber-100 rounded hover:bg-amber-900 transition font-serif flex items-center mx-auto" onclick="fetchSentence()">
+          <i class="fas fa-feather-alt mr-2"></i>
+          Turn Page
+        </button>
+      </div>
+    </div>
+    
+    <!-- Book binding effect at the bottom -->
+    <div class="h-3 bg-amber-800 shadow-inner"></div>
   </div>
+  
   <script>
     async function fetchSentence() {
       const response = await fetch('/generate');
       const text = await response.text();
       document.getElementById('generated-text').innerText = text;
+    }
+    
+    // Initial load
+    window.onload = function() {
+      if (document.getElementById('generated-text').innerText.trim() === "{{ sentence }}") {
+        fetchSentence();
+      }
     }
   </script>
 </body>
