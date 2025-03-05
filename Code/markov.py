@@ -2,10 +2,8 @@
 
 import random
 import sys
-import time
 from linkedlist import LinkedList
 from hashtable import HashTable
-
 
 def load_corpus(filename):
     """Load text from a file and return as a single string."""
@@ -69,24 +67,10 @@ def generate_sentence(chain, length=10):
     return ' '.join(sentence)
 
 
-def performance_test(filename, sentence_length, iterations=1000):
-    """Measure execution time of sentence generation over multiple iterations."""
-    text = load_corpus(filename)
-    words = preprocess_text(text)
-    chain = build_markov_chain(words)
-    
-    start_time = time.time()
-    for _ in range(iterations):
-        generate_sentence(chain, sentence_length)
-    end_time = time.time()
-    
-    print(f"Generated {iterations} sentences in {end_time - start_time:.4f} seconds.")
-
-
 def main():
     """Main function to generate a sentence from a text file using Markov chain."""
-    if len(sys.argv) < 3:
-        print("Usage: python markov.py <filename> <sentence_length> [performance_test_iterations]")
+    if len(sys.argv) != 3:
+        print("Usage: python markov.py <filename> <sentence_length>")
         sys.exit(1)
 
     filename = sys.argv[1]
@@ -97,14 +81,13 @@ def main():
     except ValueError:
         print("Error: Sentence length must be a positive integer.")
         sys.exit(1)
-    
-    if len(sys.argv) == 4:
-        try:
-            iterations = int(sys.argv[3])
-            if iterations <= 0:
-                raise ValueError
-            performance_test(filename, length, iterations)
-            sys.exit(0)
-        except ValueError:
-            print("Error: Performance test iterations must be a positive integer.")
-            sys.exit(1)
+
+    text = load_corpus(filename)
+    words = preprocess_text(text)
+    chain = build_markov_chain(words)
+    sentence = generate_sentence(chain, length)
+    print(sentence)
+
+
+if __name__ == "__main__":
+    main()
