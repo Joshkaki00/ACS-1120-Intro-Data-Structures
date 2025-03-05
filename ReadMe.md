@@ -1,6 +1,6 @@
 # Tweet Generator
 
-This project is a simple tweet generator using a Markov chain. It leverages Flask to serve a web interface and API endpoints for generating sentences.
+This project is a simple tweet generator using a Markov chain. It leverages Flask for the backend, and HTML and Tailwind CSS for the frontend, to serve a web interface and API endpoints for generating sentences.
 
 ## Project Structure
 
