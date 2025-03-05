@@ -5,8 +5,26 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tweet Generator</title>
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
 </head>
-<body>
-    <blockquote>TODO: Replace this text with the sentence you generated!</blockquote>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+  <div class="max-w-xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+    <h1 class="text-2xl font-bold text-gray-800 text-center mb-4">Generated Tweet</h1>
+    <blockquote class="italic text-lg text-gray-600 border-l-4 border-blue-500 pl-4" id="generated-text">
+      {{ sentence }}
+    </blockquote>
+    <div class="text-center mt-4">
+      <button class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition" onclick="fetchSentence()">
+        Generate Another
+      </button>
+    </div>
+  </div>
+  <script>
+    async function fetchSentence() {
+      const response = await fetch('/generate');
+      const text = await response.text();
+      document.getElementById('generated-text').innerText = text;
+    }
+  </script>
 </body>
 </html>
