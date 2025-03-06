@@ -1,12 +1,14 @@
 """Main script, uses other modules to generate sentences."""
 from flask import Flask, render_template
-import random
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from markov import load_corpus, preprocess_text, build_markov_chain, generate_sentence
 
 app = Flask(__name__)
 
 # Initialize the Markov chain using a sample text file
-FILENAME = "pg84-images.txt"  # Change this to your corpus file
+FILENAME = 'pg84-images.txt'  # Change this to your corpus file
 SENTENCE_LENGTH = 20  # Default sentence length
 
 try:

@@ -93,7 +93,6 @@ Class*.md
 slides/
 .vscode/
 *.zip
-*.txt
 
 ### Java ###
 # Compiled class file
